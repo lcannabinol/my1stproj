@@ -56,4 +56,31 @@ return
 ;  GetPixelColor: Получает цвет пикселя по координатам.
 ;  AnalyzePixel: Анализирует смещение пикселя и определяет направление.
 ;  AdjustMouse: Корректирует положение мыши.
+; Обработка нажатия LMB
+LButton::
+  if (Toggle) { ; Если отслеживание включено
+    SetTimer, PixelTracking, %TrackingDuration% ; Запуск отслеживания
+  }
+return
+
+LButton Up::
+  if (Toggle) {
+    SetTimer, PixelTracking, Off ; Остановка отслеживания
+  }
+return
+
+; Функция отслеживания
+PixelTracking:
+  ; Здесь будет вызов других скриптов (GetPixelColor, AnalyzePixel, AdjustMouse)
+  ; ... (реализация функции отслеживания) ...
+  return
+
+; ... (остальной код) ...
+```
+
+В этом коде:
+
+* `LButton::` запускает таймер `PixelTracking` с интервалом, заданным в `TrackingDuration`, только если `Toggle` истинно (отслеживание включено).
+* `LButton Up::` останавливает таймер `PixelTracking` при отпускании левой кнопки мыши.
+* `PixelTracking:` — это функция, которая будет вызываться с интервалом `TrackingDuration`. 
 ```
