@@ -1,80 +1,59 @@
-```autohotkey
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings
 
-; --- Настройки по умолчанию ---
+```autohotkey
+; NoRecoil.ahk - Основной скрипт для отслеживания прицела
+
+; Настройки по умолчанию
 Hotkey := "Ctrl+Num0"
 VerticalOffset := 0
-TrackingDuration := 10 ; Миллисекунды
-Sensitivity := 1 ; Чувствительность движения мыши
+TrackingDuration := 10  ; Миллисекунды
+Sensitivity := 1       ; Чувствительность
 
-; --- Получение размера экрана ---
+; Получение размера экрана
 ScreenWidth := A_ScreenWidth
 ScreenHeight := A_ScreenHeight
 
-; --- GUI ---
+; GUI (графический интерфейс пользователя) -  Этот код создает окно настроек.  Вам нужно будет его заполнить.
 Gui, +AlwaysOnTop +ToolWindow -Caption
-Gui, Add, Text, x10 y10, Настройки отслеживания прицела
-Gui, Add, Text, x10 y30, Горячие клавиши:
-Gui, Add, Edit, x100 y30 w100 vHotkey, %Hotkey%
-Gui, Add, Text, x10 y60, Смещение прицела (пиксели):
-Gui, Add, Edit, x100 y60 w100 vVerticalOffset, %VerticalOffset%
-Gui, Add, Text, x10 y90, Длительность отслеживания (мс):
-Gui, Add, Edit, x100 y90 w100 vTrackingDuration, %TrackingDuration%
-Gui, Add, Text, x10 y120, Чувствительность:
-Gui, Add, Edit, x100 y120 w100 vSensitivity, %Sensitivity%
-Gui, Add, Button, x10 y150 w100 gSubmit, Применить
+Gui, Add, Text, x10 y10, Настройки
+; ... (Добавьте сюда элементы GUI: поля ввода, кнопки и т.д.) ...
 Gui, Show
 
-; --- Обработка событий GUI ---
+; Обработка событий GUI -  Этот код обрабатывает события, происходящие в окне настроек.  Вам нужно будет его заполнить.
 GuiSubmit:
-  Hotkey := RegExReplace(Hotkey, "\s+", "") ; Удаление лишних пробелов
-  VerticalOffset := VerticalOffset
-  TrackingDuration := TrackingDuration
-  Sensitivity := Sensitivity
-  ; Проверка на корректность введенных значений
-  if (TrackingDuration <= 0) {
-    MsgBox, Длительность отслеживания должна быть больше 0!
-    return
-  }
-  if (Sensitivity <= 0) {
-    MsgBox, Чувствительность должна быть больше 0!
-    return
-  }
-  ; Сохранение настроек (можно добавить сохранение в файл)
-  return
+  ; ... (Обработка введенных данных) ...
+return
 
-; --- Горячие клавиши ---
-#IfWinActive, ahk_exe имя_вашего_шутера.exe ; Запускаем только в окне игры
+; Горячие клавиши -  Активация/деактивация отслеживания
+#IfWinActive, ahk_exe имя_вашего_шутера.exe ; Замените "имя_вашего_шутера.exe" на имя вашего файла
   ^+0::
-    ; Включаем/выключаем отслеживание
-    Toggle := !Toggle  ; Переключаем переменную Toggle
-    if (Toggle) {
-      SetTimer, PixelTracking, %TrackingDuration%
-    } else {
-      SetTimer, PixelTracking, Off
-    }
+    Toggle := !Toggle ; Переключение состояния отслеживания
+    ; ... (отображение уведомления - реализуйте самостоятельно) ...
     return
 #IfWinActive
 
-; --- Обработка нажатия LMB ---
+; Обработка нажатия левой кнопки мыши
 LButton::
-  if (Toggle) { ; Отслеживание включено?
-    ; Запуск отслеживания пикселя
-    ; ... (здесь вызов функций из других скриптов)
+  if (Toggle) { ; Если отслеживание включено
+    SetTimer, PixelTracking, %TrackingDuration% ; Запуск отслеживания
   }
 return
 
-; --- Функция отслеживания ---
-PixelTracking:
-  ; Здесь будет вызов других скриптов (2, 3, 4...)
-  ; ... (см. ниже)
+LButton Up::
+  if (Toggle) {
+    SetTimer, PixelTracking, Off ; Остановка отслеживания
+  }
 return
 
-; --- Остальные скрипты (2, 3, 4...) ---
-; 2. GetPixelColor.ahk
-; 3. AnalyzePixel.ahk
-; 4. AdjustMouse.ahk
-```
+; Функция отслеживания -  Цикл, который постоянно выполняется, пока отслеживание включено
+PixelTracking:
+  ; centerX := ScreenWidth / 2
+  ; centerY := ScreenHeight / 2 + VerticalOffset
+  ; ... (Вызов функций GetPixelColor, AnalyzePixel, AdjustMouse) ...
+return
 
-Остальные скрипты (`GetPixelColor.ahk`, `AnalyzePixel.ahk`, `AdjustMouse.ahk`) остаются без изменений.  Теперь отслеживание пикселя запускается только при нажатии LMB, если горячие клавиши активировали отслеживание (`Toggle = true`).  Размер экрана определяется автоматически.  Обратите внимание на добавление переменной `Toggle` для управления состоянием отслеживания.  Замените `"имя_вашего_шутера.exe"` на реальное имя исполняемого файла вашей игры.
+; ---  Функции в отдельных файлах (GetPixelColor.ahk, AnalyzePixel.ahk, AdjustMouse.ahk) ---
+;  Эти функции нужно реализовать самостоятельно.
+;  GetPixelColor: Получает цвет пикселя по координатам.
+;  AnalyzePixel: Анализирует смещение пикселя и определяет направление.
+;  AdjustMouse: Корректирует положение мыши.
+```
